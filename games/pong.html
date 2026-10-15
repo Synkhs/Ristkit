@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neon Pong — RistKit</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:#0a0a0f; color:#f4f4f8; font-family:system-ui,sans-serif;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    min-height:100vh; gap:14px; overflow:hidden;
+  }
+  h1 { font-size:1.1rem; letter-spacing:.12em; text-transform:uppercase; color:#a855f7; }
+  .hud { font-size:1rem; color:#9a9ab0; }
+  .hud b { color:#fff; font-size:1.3rem; }
+  canvas {
+    background:#0e0e16; border:1px solid rgba(168,85,247,.3);
+    border-radius:12px; box-shadow:0 0 40px rgba(168,85,247,.18);
+    touch-action:none;
+  }
+  .hint { font-size:.78rem; color:#6b6b85; }
+  .overlay {
+    position:absolute; inset:0; display:none; place-items:center;
+    background:rgba(10,10,15,.86); backdrop-filter:blur(6px); border-radius:12px;
+    text-align:center; flex-direction:column; gap:12px;
+  }
+  .overlay.show { display:grid; }
+  .overlay h2 { font-size:1.6rem; color:#a855f7; }
+  button {
+    background:linear-gradient(135deg,#a855f7,#7c3aed); border:0; color:#fff;
+    padding:11px 26px; border-radius:10px; font-weight:600; cursor:pointer; font-size:.95rem;
+  }
+  button:hover { filter:brightness(1.12); }
+  .wrap { position:relative; }
+</style>
+</head>
+<body>
+<h1>🏓 Neon Pong</h1>
+<div class="hud"><b id="p1">0</b> &nbsp;—&nbsp; <b id="p2">0</b></div>
+<div class="wrap">
+  <canvas id="c" width="600" height="380"></canvas>
+  <div class="overlay" id="overlay">
+    <h2 id="title">Fin del partido</h2>
+    <p id="text"></p>
+    <button id="restart">Revancha</button>
+  </div>
+</div>
+<p class="hint">Ratón / flechas ↑↓ para tu pala · Primero a 5</p>
+
+<script>
+const canvas = document.getElementById('c'), ctx = canvas.getContext('2d');
+const W = 600, H = 380, PH = 70, PW = 10;
+let player = { y:H/2 }, ai = { y:H/2 }, ball, s1 = 0, s2 = 0, over = false, running = false, keys = {};
+
+function resetBall(dir) {
+  const angle = (Math.random() * 0.8 - 0.4) * Math.PI;
+  ball = { x:W/2, y:H/2, vx:Math.cos(angle)*5*dir, vy:Math.sin(angle)*5, r:7 };
+}
+function reset() {
+  s1 = s2 = 0; over = false; running = true;
+  document.getElementById('p1').textContent = 0;
+  document.getElementById('p2').textContent = 0;
+  document.getElementById('overlay').classList.remove('show');
+  player.y = ai.y = H/2;
+  resetBall(Math.random() < .5 ? 1 : -1);
+}
+function end(msg) {
+  over = true; running = false;
+  document.getElementById('title').textContent = msg;
+  document.getElementById('text').textContent = `Resultado: ${s1} — ${s2}`;
+  document.getElementById('overlay').classList.add('show');
+}
+function step() {
+  // Player
+  if (keys.ArrowUp || keys.w) player.y -= 7;
+  if (keys.ArrowDown || keys.s) player.y += 7;
+  player.y = Math.max(PH/2, Math.min(H - PH/2, player.y));
+  // AI (con velocidad limitada)
+  const target = ball.y, sp = 4.6;
+  if (ai.y < target - 6) ai.y += sp;
+  else if (ai.y > target + 6) ai.y -= sp;
+  ai.y = Math.max(PH/2, Math.min(H - PH/2, ai.y));
+  // Ball
+  ball.x += ball.vx; ball.y += ball.vy;
+  if (ball.y - ball.r < 0) { ball.y = ball.r; ball.vy *= -1; }
+  if (ball.y + ball.r > H) { ball.y = H - ball.r; ball.vy *= -1; }
+  // Colisiones palas
+  if (ball.x - ball.r < 22 + PW && ball.x - ball.r > 22 - 6 &&
+      Math.abs(ball.y - player.y) < PH/2 + ball.r && ball.vx < 0) {
+    ball.vx = Math.abs(ball.vx) * 1.05;
+    ball.vy += ((ball.y - player.y) / (PH/2)) * 3;
+    ball.x = 22 + PW + ball.r;
+  }
+  if (ball.x + ball.r > W - 22 - PW && ball.x + ball.r < W - 22 + 6 + PW &&
+      Math.abs(ball.y - ai.y) < PH/2 + ball.r && ball.vx > 0) {
+    ball.vx = -Math.abs(ball.vx) * 1.05;
+    ball.vy += ((ball.y - ai.y) / (PH/2)) * 3;
+    ball.x = W - 22 - PW - ball.r;
+  }
+  // Puntos
+  if (ball.x < -12) { s2++; document.getElementById('p2').textContent = s2; s2 >= 5 ? end('¡Gana la IA!') : resetBall(1); }
+  if (ball.x > W + 12) { s1++; document.getElementById('p1').textContent = s1; s1 >= 5 ? end('¡Ganas tú! 🎉') : resetBall(-1); }
+}
+function draw() {
+  ctx.clearRect(0,0,W,H);
+  ctx.setLineDash([8, 10]); ctx.strokeStyle = 'rgba(168,85,247,.35)'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(W/2, 0); ctx.lineTo(W/2, H); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = '#a855f7';
+  ctx.beginPath(); ctx.roundRect(22, player.y - PH/2, PW, PH, 5); ctx.fill();
+  ctx.fillStyle = '#c4b5fd';
+  ctx.beginPath(); ctx.roundRect(W - 22 - PW, ai.y - PH/2, PW, PH, 5); ctx.fill();
+  ctx.shadowColor = '#a855f7'; ctx.shadowBlur = 14;
+  ctx.fillStyle = '#fff';
+  ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, 7); ctx.fill();
+  ctx.shadowBlur = 0;
+}
+function loop() {
+  if (running) step();
+  draw();
+  requestAnimationFrame(loop);
+}
+document.addEventListener('keydown', e => { keys[e.key] = true; if (['ArrowUp','ArrowDown'].includes(e.key)) e.preventDefault(); });
+document.addEventListener('keyup', e => keys[e.key] = false);
+canvas.addEventListener('mousemove', e => {
+  const r = canvas.getBoundingClientRect();
+  player.y = Math.max(PH/2, Math.min(H - PH/2, (e.clientY - r.top) * (H / r.height)));
+});
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  const r = canvas.getBoundingClientRect();
+  player.y = Math.max(PH/2, Math.min(H - PH/2, (e.touches[0].clientY - r.top) * (H / r.height)));
+}, {passive:false});
+canvas.addEventListener('click', () => { if (!over && ball.vx === 0) resetBall(1); });
+document.getElementById('restart').onclick = reset;
+reset();
+loop();
+</script>
+</body>
+</html>

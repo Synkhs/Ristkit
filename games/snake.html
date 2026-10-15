@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snake Orbital — RistKit</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:#0a0a0f; color:#f4f4f8; font-family:system-ui,sans-serif;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    min-height:100vh; gap:14px; overflow:hidden;
+  }
+  h1 { font-size:1.1rem; letter-spacing:.12em; text-transform:uppercase; color:#a855f7; }
+  .hud { display:flex; gap:24px; font-size:.9rem; color:#9a9ab0; }
+  .hud b { color:#fff; }
+  canvas {
+    background:#0e0e16; border:1px solid rgba(168,85,247,.3);
+    border-radius:12px; box-shadow:0 0 40px rgba(168,85,247,.18);
+    touch-action:none;
+  }
+  .hint { font-size:.78rem; color:#6b6b85; }
+  .overlay {
+    position:absolute; inset:0; display:none; place-items:center;
+    background:rgba(10,10,15,.86); backdrop-filter:blur(6px); border-radius:12px;
+    text-align:center; flex-direction:column; gap:12px;
+  }
+  .overlay.show { display:grid; }
+  .overlay h2 { font-size:1.6rem; color:#a855f7; }
+  button {
+    background:linear-gradient(135deg,#a855f7,#7c3aed); border:0; color:#fff;
+    padding:11px 26px; border-radius:10px; font-weight:600; cursor:pointer; font-size:.95rem;
+  }
+  button:hover { filter:brightness(1.12); }
+  .wrap { position:relative; }
+</style>
+</head>
+<body>
+<h1>🐍 Snake Orbital</h1>
+<div class="hud"><span>Puntos: <b id="score">0</b></span><span>Récord: <b id="best">0</b></span></div>
+<div class="wrap">
+  <canvas id="c" width="400" height="400"></canvas>
+  <div class="overlay" id="overlay">
+    <h2 id="overlayTitle">Game Over</h2>
+    <p id="overlayText"></p>
+    <button id="restart">Jugar de nuevo</button>
+  </div>
+</div>
+<p class="hint">Flechas / WASD para mover · Espacio para pausar</p>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const GRID = 20, CELLS = 20;
+let snake, dir, nextDir, food, score, best = +(localStorage.getItem('rk_snake_best') || 0), dead, paused, tick = 120, last = 0, acc = 0;
+
+document.getElementById('best').textContent = best;
+
+function reset() {
+  snake = [{x:10,y:10},{x:9,y:10},{x:8,y:10}];
+  dir = {x:1,y:0}; nextDir = dir;
+  score = 0; dead = false; paused = false; tick = 120; acc = 0;
+  document.getElementById('score').textContent = 0;
+  placeFood();
+  document.getElementById('overlay').classList.remove('show');
+}
+function placeFood() {
+  do {
+    food = { x:(Math.random()*CELLS)|0, y:(Math.random()*CELLS)|0 };
+  } while (snake.some(s => s.x === food.x && s.y === food.y));
+}
+function die() {
+  dead = true;
+  if (score > best) { best = score; localStorage.setItem('rk_snake_best', best); document.getElementById('best').textContent = best; }
+  document.getElementById('overlayTitle').textContent = 'Game Over';
+  document.getElementById('overlayText').textContent = `Puntuación: ${score}`;
+  document.getElementById('overlay').classList.add('show');
+}
+function step() {
+  dir = nextDir;
+  const head = { x:snake[0].x + dir.x, y:snake[0].y + dir.y };
+  if (head.x < 0 || head.y < 0 || head.x >= CELLS || head.y >= CELLS || snake.some(s => s.x === head.x && s.y === head.y)) return die();
+  snake.unshift(head);
+  if (head.x === food.x && head.y === food.y) {
+    score += 10;
+    document.getElementById('score').textContent = score;
+    tick = Math.max(70, tick - 2);
+    placeFood();
+  } else snake.pop();
+}
+function draw() {
+  ctx.clearRect(0,0,400,400);
+  ctx.fillStyle = '#7c3aed33';
+  ctx.fillRect(food.x*GRID+3, food.y*GRID+3, GRID-6, GRID-6);
+  ctx.beginPath(); ctx.arc(food.x*GRID+GRID/2, food.y*GRID+GRID/2, 6, 0, 7); ctx.fillStyle='#c4b5fd'; ctx.fill();
+  snake.forEach((s,i) => {
+    ctx.fillStyle = i === 0 ? '#a855f7' : `rgba(168,85,247,${1 - i/(snake.length+6)})`;
+    ctx.beginPath();
+    ctx.roundRect(s.x*GRID+1, s.y*GRID+1, GRID-2, GRID-2, 5);
+    ctx.fill();
+  });
+}
+function loop(t) {
+  requestAnimationFrame(loop);
+  if (!last) last = t;
+  acc += t - last; last = t;
+  if (dead || paused) return;
+  while (acc > tick) { acc -= tick; step(); }
+  draw();
+}
+document.addEventListener('keydown', e => {
+  const k = e.key.toLowerCase();
+  const dirs = { arrowup:{x:0,y:-1}, w:{x:0,y:-1}, arrowdown:{x:0,y:1}, s:{x:0,y:1}, arrowleft:{x:-1,y:0}, a:{x:-1,y:0}, arrowright:{x:1,y:0}, d:{x:1,y:0} };
+  if (dirs[k]) {
+    e.preventDefault();
+    const d = dirs[k];
+    if (d.x !== -dir.x || d.y !== -dir.y) nextDir = d;
+  }
+  if (k === ' ') { e.preventDefault(); if (!dead) paused = !paused; }
+});
+let ts = null;
+canvas.addEventListener('touchstart', e => { ts = e.touches[0]; }, {passive:true});
+canvas.addEventListener('touchend', e => {
+  if (!ts) return;
+  const t = e.changedTouches[0], dx = t.clientX - ts.clientX, dy = t.clientY - ts.clientY;
+  if (Math.abs(dx) < 18 && Math.abs(dy) < 18) { nextDir = {x:0,y:-1}; return; }
+  const d = Math.abs(dx) > Math.abs(dy) ? {x:Math.sign(dx),y:0} : {x:0,y:Math.sign(dy)};
+  if (d.x !== -dir.x || d.y !== -dir.y) nextDir = d;
+  ts = null;
+}, {passive:true});
+document.getElementById('restart').onclick = reset;
+reset();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RistKit Studio — Crea y juega juegos en HTML</title>
+  <meta name="description" content="RistKit Studio: crea juegos en HTML con nuestro editor en línea, juégalos al instante, aprende con guías y usa el asistente de IA con cualquier API (OpenRouter, OpenAI, Anthropic...).">
+  <meta name="theme-color" content="#0a0a0f">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="assets/logo-128.png">
+  <meta property="og:title" content="RistKit Studio">
+  <meta property="og:description" content="Crea, juega y domina juegos HTML. Editor en línea, guías y asistente de IA con tu propia API key.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/logo-512.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "RistKit Studio",
+    "description": "Plataforma para crear, jugar y aprender juegos HTML en el navegador, con editor en línea y asistente de IA.",
+    "applicationCategory": "GameApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "inLanguage": "es"
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Preloader -->
+  <div class="preloader" id="preloader">
+    <img src="assets/emblem.png" alt="RistKit" class="preloader__logo">
+    <div class="preloader__bar"><span></span></div>
+  </div>
+
+  <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+  <!-- Navbar -->
+  <header class="navbar" id="navbar">
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+    <div class="container navbar__inner">
+      <a href="#inicio" class="navbar__brand" aria-label="RistKit inicio">
+        <img src="assets/emblem.png" alt="" class="navbar__emblem">
+        <span class="navbar__wordmark">Rist<em>Kit</em></span>
+      </a>
+      <nav class="navbar__menu" id="navMenu" aria-label="Navegación principal">
+        <a href="#inicio" class="navbar__link active">Inicio</a>
+        <a href="#juegos" class="navbar__link">Juegos</a>
+        <a href="#editor" class="navbar__link">Crear</a>
+        <a href="#guias" class="navbar__link">Guías</a>
+        <a href="#asistente" class="navbar__link">Asistente IA</a>
+        <a href="#editor" class="navbar__link navbar__link--cta">Abrir editor</a>
+      </nav>
+      <button class="navbar__toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav-backdrop" id="navBackdrop" aria-hidden="true"></div>
+  </header>
+
+  <main>
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="inicio">
+      <div class="hero__bg" aria-hidden="true">
+        <div class="hero__orbit hero__orbit--1"></div>
+        <div class="hero__orbit hero__orbit--2"></div>
+        <div class="hero__orbit hero__orbit--3"></div>
+        <div class="hero__grid"></div>
+      </div>
+      <div class="container hero__content">
+        <div class="hero__text reveal">
+          <p class="hero__eyebrow">RistKit Studio</p>
+          <h1 class="hero__title">Crea, juega y domina<br><span class="gradient-text">juegos HTML</span></h1>
+          <p class="hero__subtitle">
+            Escribe tu juego en nuestro editor en línea, ejecútalo al instante y
+            compártelo. Con guías paso a paso y un asistente de IA que conecta
+            con cualquier API.
+          </p>
+          <div class="hero__actions">
+            <a href="#editor" class="btn btn--primary">Crear un juego</a>
+            <a href="#juegos" class="btn btn--ghost">Jugar ahora</a>
+          </div>
+          <div class="hero__note">
+            <span>100% en tu navegador</span>
+            <span>Sin instalación</span>
+            <span>Tu API key, tu IA</span>
+          </div>
+        </div>
+        <div class="hero__visual reveal reveal--delay">
+          <div class="hero__halo" aria-hidden="true"></div>
+          <img src="assets/logo-alpha.png" alt="RistKit" class="hero__logo">
+          <div class="hero__code hero__code--1" aria-hidden="true">
+            <div class="hero__code-bar"><i></i><i></i><i></i><span>game.js</span></div>
+            <pre><span class="tk">function</span> <span class="tf">update</span>() {
+  player.<span class="tf">move</span>(<span class="ts">"right"</span>);
+  <span class="tf">checkCollisions</span>();
+}</pre>
+          </div>
+          <div class="hero__code hero__code--2" aria-hidden="true">
+            <div class="hero__code-bar"><i></i><i></i><i></i><span>index.html</span></div>
+            <pre>&lt;<span class="tk">canvas</span> <span class="tf">id</span>=<span class="ts">"game"</span>&gt;
+&lt;<span class="tk">script</span>&gt;
+  <span class="tf">gameLoop</span>();
+&lt;/<span class="tk">script</span>&gt;</pre>
+          </div>
+        </div>
+      </div>
+      <a href="#juegos" class="hero__scroll" aria-label="Desplazarse"><span class="hero__scroll-line"></span></a>
+    </section>
+
+    <!-- ============ STATS ============ -->
+    <section class="stats" aria-label="Cifras">
+      <div class="container stats__grid">
+        <div class="stat reveal">
+          <span class="stat__number" data-count="4">0</span><span class="stat__suffix"></span>
+          <p class="stat__label">Juegos listos para jugar</p>
+        </div>
+        <div class="stat reveal">
+          <span class="stat__number" id="statMine" data-count="0">0</span><span class="stat__suffix"></span>
+          <p class="stat__label">Tus proyectos creados</p>
+        </div>
+        <div class="stat reveal">
+          <span class="stat__number" data-count="100">0</span><span class="stat__suffix">%</span>
+          <p class="stat__label">HTML5 + JavaScript</p>
+        </div>
+        <div class="stat reveal">
+          <span class="stat__number" data-count="0">0</span><span class="stat__suffix"></span>
+          <p class="stat__label">Instalaciones necesarias</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ARCADE ============ -->
+    <section class="section" id="juegos">
+      <div class="container">
+        <div class="section__header reveal">
+          <p class="section__eyebrow">Arcade RistKit</p>
+          <h2 class="section__title">Juega <span class="gradient-text">ahora mismo</span></h2>
+          <p class="section__lead">Juegos hechos 100% con HTML, CSS y JavaScript puros. Los tuyos aparecen aquí automáticamente.</p>
+        </div>
+
+        <div class="arcade__filters reveal" role="tablist" aria-label="Filtrar juegos">
+          <button class="filter-btn active" data-filter="all">Todos</button>
+          <button class="filter-btn" data-filter="arcade">Arcade</button>
+          <button class="filter-btn" data-filter="action">Acción</button>
+          <button class="filter-btn" data-filter="puzzle">Puzle</button>
+          <button class="filter-btn" data-filter="mine">Mis juegos</button>
+        </div>
+
+        <div class="arcade__grid" id="arcadeGrid">
+          <!-- Snake -->
+          <article class="game-card reveal" data-category="arcade">
+            <div class="game-card__thumb thumb--snake">
+              <svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 46h14a8 8 0 000-16H24a8 8 0 010-16h18"/><circle cx="46" cy="14" r="4" fill="#fff" stroke="none"/><path d="M50 14h6"/></svg>
+              <span class="game-card__play">▶</span>
+            </div>
+            <div class="game-card__body">
+              <div class="game-card__row">
+                <span class="game-card__tag">Arcade</span>
+                <span style="font-size:.75rem;color:var(--text-muted)">Clásico</span>
+              </div>
+              <h3 class="game-card__title">Snake Orbital</h3>
+              <p class="game-card__text">Crece sin morder tu propia cola. Cada fruta te hace más rápido.</p>
+              <div class="game-card__actions">
+                <button class="btn btn--primary btn--sm" data-play="games/snake.html" data-title="Snake Orbital">Jugar</button>
+                <button class="btn btn--ghost btn--sm" data-edit-external="games/snake.html">Ver código</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Pong -->
+          <article class="game-card reveal" data-category="arcade">
+            <div class="game-card__thumb thumb--pong">
+              <svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"><rect x="8" y="16" width="7" height="32" rx="3" fill="#fff" stroke="none"/><rect x="49" y="16" width="7" height="32" rx="3" fill="#fff" stroke="none"/><circle cx="32" cy="32" r="5" fill="#fff" stroke="none"/><path d="M32 8v6M32 50v6" stroke-dasharray="3 5"/></svg>
+              <span class="game-card__play">▶</span>
+            </div>
+            <div class="game-card__body">
+              <div class="game-card__row">
+                <span class="game-card__tag">Arcade</span>
+                <span style="font-size:.75rem;color:var(--text-muted)">1 jugador</span>
+              </div>
+              <h3 class="game-card__title">Neon Pong</h3>
+              <p class="game-card__text">Derrota a la IA en el clásico de siempre. Primero a 5 puntos.</p>
+              <div class="game-card__actions">
+                <button class="btn btn--primary btn--sm" data-play="games/pong.html" data-title="Neon Pong">Jugar</button>
+                <button class="btn btn--ghost btn--sm" data-edit-external="games/pong.html">Ver código</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Orbit Dash -->
+          <article class="game-card reveal" data-category="action">
+            <div class="game-card__thumb thumb--dash">
+              <svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"><circle cx="20" cy="32" r="7" fill="#fff" stroke="none"/><path d="M40 6v18a8 8 0 0016 0V6" opacity=".9"/><path d="M40 58V40a8 8 0 0116 0v18" opacity=".9"/><path d="M30 32h6"/></svg>
+              <span class="game-card__play">▶</span>
+            </div>
+            <div class="game-card__body">
+              <div class="game-card__row">
+                <span class="game-card__tag">Acción</span>
+                <span style="font-size:.75rem;color:var(--text-muted)">Un botón</span>
+              </div>
+              <h3 class="game-card__title">Orbit Dash</h3>
+              <p class="game-card__text">Impúlsate entre los anillos. Cada hueco es más estrecho.</p>
+              <div class="game-card__actions">
+                <button class="btn btn--primary btn--sm" data-play="games/orbit-dash.html" data-title="Orbit Dash">Jugar</button>
+                <button class="btn btn--ghost btn--sm" data-edit-external="games/orbit-dash.html">Ver código</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Memory -->
+          <article class="game-card reveal" data-category="puzzle">
+            <div class="game-card__thumb thumb--memory">
+              <svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"><rect x="8" y="8" width="20" height="20" rx="5"/><rect x="36" y="8" width="20" height="20" rx="5" fill="#fff" opacity=".85"/><rect x="8" y="36" width="20" height="20" rx="5" fill="#fff" opacity=".85"/><rect x="36" y="36" width="20" height="20" rx="5"/></svg>
+              <span class="game-card__play">▶</span>
+            </div>
+            <div class="game-card__body">
+              <div class="game-card__row">
+                <span class="game-card__tag">Puzle</span>
+                <span style="font-size:.75rem;color:var(--text-muted)">Relajante</span>
+              </div>
+              <h3 class="game-card__title">Memoria Orbital</h3>
+              <p class="game-card__text">Encuentra las 8 parejas con la menor cantidad de movimientos.</p>
+              <div class="game-card__actions">
+                <button class="btn btn--primary btn--sm" data-play="games/memory.html" data-title="Memoria Orbital">Jugar</button>
+                <button class="btn btn--ghost btn--sm" data-edit-external="games/memory.html">Ver código</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Los juegos del usuario se insertan aquí (js/main.js) -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ EDITOR ============ -->
+    <section class="section section--alt" id="editor">
+      <div class="container">
+        <div class="section__header reveal">
+          <p class="section__eyebrow">Creador de juegos</p>
+          <h2 class="section__title">Escribe tu juego, <span class="gradient-text">púlsalo jugar</span></h2>
+          <p class="section__lead">HTML + CSS + JavaScript en un solo archivo. Ejecuta en vivo, guarda en tu arcade y descarga cuando quieras.</p>
+        </div>
+
+        <div class="ide reveal">
+          <div class="ide__toolbar">
+            <div class="ide__dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span class="ide__tab" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+              index.html
+            </span>
+            <button class="tool-btn tool-btn--run" id="btnRun">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              Ejecutar <kbd>Ctrl+↵</kbd>
+            </button>
+            <button class="tool-btn" id="btnTemplates">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"/></svg>
+              Ejemplos
+            </button>
+            <button class="tool-btn" id="btnNew">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+              Nuevo
+            </button>
+            <div class="ide__spacer"></div>
+            <input class="ide__name" id="gameName" type="text" placeholder="Nombre del juego" maxlength="40">
+            <button class="tool-btn" id="btnSave">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+              Guardar
+            </button>
+            <button class="tool-btn" id="btnDownload">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              Descargar
+            </button>
+          </div>
+
+          <div class="ide__body">
+            <div class="ide__code">
+              <div class="ide__gutter" id="gutter" aria-hidden="true"><div>1</div></div>
+              <textarea id="codeInput" spellcheck="false" placeholder="<!DOCTYPE html>&#10;<html>&#10;  ...&#10;</html>" aria-label="Código del juego"></textarea>
+            </div>
+            <div class="ide__preview">
+              <iframe id="preview" title="Vista previa del juego" sandbox="allow-scripts allow-same-origin allow-modals allow-pointer-lock"></iframe>
+            </div>
+          </div>
+
+          <div class="ide__status">
+            <span id="statusMsg" class="ok">● Listo</span>
+            <span id="statusPos">Ln 1, Col 1</span>
+            <span id="statusSize">0 líneas</span>
+            <span class="right">HTML · JS · CSS</span>
+          </div>
+        </div>
+
+        <div class="ide__tips reveal">
+          <span><kbd>Ctrl</kbd> + <kbd>Enter</kbd> Ejecutar</span>
+          <span><kbd>Tab</kbd> Indentar</span>
+          <span>El juego se guarda en tu navegador (localStorage)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ GUÍAS ============ -->
+    <section class="section" id="guias">
+      <div class="container">
+        <div class="section__header reveal">
+          <p class="section__eyebrow">Centro de ayuda</p>
+          <h2 class="section__title">Aprende a crear <span class="gradient-text">juegos HTML</span></h2>
+          <p class="section__lead">Desde cero hasta tu primer juego publicable. Sin frameworks, solo código que entiendes.</p>
+        </div>
+
+        <div class="quickstart">
+          <div class="quickstart__steps reveal">
+            <div class="qstep">
+              <span class="qstep__num">1</span>
+              <div>
+                <h3>Abre el editor</h3>
+                <p>Pulsa “Ejecutar” con la plantilla que ya viene cargada para ver cómo funciona el bucle de juego.</p>
+              </div>
+            </div>
+            <div class="qstep">
+              <span class="qstep__num">2</span>
+              <div>
+                <h3>Modifica el código</h3>
+                <p>Cambia el color, la velocidad o añade enemigos. Cada cambio se ve reflejado al ejecutar.</p>
+              </div>
+            </div>
+            <div class="qstep">
+              <span class="qstep__num">3</span>
+              <div>
+                <h3>Guarda y comparte</h3>
+                <p>Guárdalo en tu arcade o descarga el archivo <code>.html</code>: se abre en cualquier navegador.</p>
+              </div>
+            </div>
+            <div class="qstep">
+              <span class="qstep__num">4</span>
+              <div>
+                <h3>Usa el asistente de IA</h3>
+                <p>¿Bloqueado? Conéctate a tu API favorita y pide: «añade sonido y menú de pausa».</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="code-block reveal">
+            <div class="code-block__head">
+              <span>mi-juego.html — esqueleto mínimo</span>
+              <button class="copy-btn" data-copy="skeleton">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                Copiar
+              </button>
+            </div>
+            <pre id="skeletonCode"><span class="tc">&lt;!-- Esqueleto de un juego HTML --&gt;</span>
+&lt;<span class="tk">canvas</span> <span class="tf">id</span>=<span class="ts">"game"</span> <span class="tf">width</span>=<span class="ts">"480"</span> <span class="tf">height</span>=<span class="ts">"360"</span>&gt;&lt;/<span class="tk">canvas</span>&gt;
+&lt;<span class="tk">script</span>&gt;
+  <span class="tk">const</span> ctx = document.<span class="tf">getElementById</span>(<span class="ts">"game"</span>).<span class="tf">getContext</span>(<span class="ts">"2d"</span>);
+  <span class="tk">let</span> x = <span class="ts">40</span>;
+
+  <span class="tk">function</span> <span class="tf">update</span>() {
+    ctx.<span class="tf">clearRect</span>(<span class="ts">0</span>, <span class="ts">0</span>, <span class="ts">480</span>, <span class="ts">360</span>);
+    ctx.<span class="tf">fillStyle</span> = <span class="ts">"#a855f7"</span>;
+    x = (x + <span class="ts">2</span>) % <span class="ts">480</span>;              <span class="tc">// se mueve solo</span>
+    ctx.<span class="tf">fillRect</span>(x, <span class="ts">160</span>, <span class="ts">50</span>, <span class="ts">50</span>);
+    <span class="tf">requestAnimationFrame</span>(update);
+  }
+  <span class="tf">update</span>();
+&lt;/<span class="tk">script</span>&gt;</pre>
+          </div>
+        </div>
+
+        <div class="guides__grid">
+          <details class="guide reveal">
+            <summary>
+              <span class="guide__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></span>
+              ¿Qué es un juego HTML?
+              <svg class="guide__arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="guide__content">
+              <p>Es un juego hecho solo con las tecnologías nativas del navegador: <strong>HTML</strong> para la estructura, <strong>CSS</strong> para el estilo y <strong>JavaScript</strong> para la lógica.</p>
+              <ul>
+                <li>No necesitas instalar nada: se abre con doble clic.</li>
+                <li>Funciona en móvil, tablet y escritorio.</li>
+                <li>Se puede subir a cualquier hosting (GitHub Pages, itch.io...).</li>
+                <li>El lienzo principal es la etiqueta <code>&lt;canvas&gt;</code>.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="guide reveal">
+            <summary>
+              <span class="guide__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span>
+              El bucle de juego
+              <svg class="guide__arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="guide__content">
+              <p>Todos los juegos repiten lo mismo 60 veces por segundo con <code>requestAnimationFrame</code>:</p>
+              <ul>
+                <li><strong>Input:</strong> lee teclado, ratón o táctil.</li>
+                <li><strong>Update:</strong> mueve jugadores, verifica colisiones, suma puntos.</li>
+                <li><strong>Draw:</strong> borra el canvas y vuelve a dibujar.</li>
+              </ul>
+              <p>Ese ciclo es el <em>game loop</em>. Sin él, nada se movería.</p>
+            </div>
+          </details>
+
+          <details class="guide reveal">
+            <summary>
+              <span class="guide__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M9 9h6v6H9z"/></svg></span>
+              Colisiones básicas
+              <svg class="guide__arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="guide__content">
+              <p>La más común es AABB (rectángulos que se solapan):</p>
+              <pre style="font-family:var(--font-mono);font-size:.78rem;background:#0b0b12;padding:10px;border-radius:9px;overflow-x:auto">if (a.x &lt; b.x + b.w &amp;&amp; a.x + a.w &gt; b.x &amp;&amp;
+    a.y &lt; b.y + b.h &amp;&amp; a.y + a.h &gt; b.y) {
+  // ¡hay colisión!
+}</pre>
+              <p>Para círculos, compara la distancia entre centros con la suma de radios usando <code>Math.hypot()</code>.</p>
+            </div>
+          </details>
+
+          <details class="guide reveal">
+            <summary>
+              <span class="guide__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 17l6-6-6-6M12 19h8"/></svg></span>
+              Controles y entrada
+              <svg class="guide__arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="guide__content">
+              <ul>
+                <li>Teclado: escucha <code>keydown</code> / <code>keyup</code> y guarda el estado en un objeto.</li>
+                <li>Ratón: usa <code>mousemove</code> sobre el canvas (ajusta la escala con <code>getBoundingClientRect()</code>).</li>
+                <li>Táctil: <code>touchstart</code> / <code>touchmove</code> y no olvides <code>preventDefault()</code>.</li>
+                <li>Guarda récords con <code>localStorage</code> como hacen nuestros juegos.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="guide reveal">
+            <summary>
+              <span class="guide__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></span>
+              Exportar y publicar
+              <svg class="guide__arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="guide__content">
+              <p>Un juego HTML es un solo archivo: tu navegador es el motor.</p>
+              <ul>
+                <li><strong>Descargar</strong> desde el editor obtiene el <code>.html</code> listo.</li>
+                <li><strong>itch.io</strong>: crea una página y sube el archivo (o un ZIP).</li>
+                <li><strong>GitHub Pages</strong>: súbelo a un repositorio y actívalo en Settings.</li>
+                <li>Para móvil, añade <code>&lt;meta name="viewport"&gt;</code> y eventos táctiles.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="guide reveal">
+            <summary>
+              <span class="guide__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l7 4v12l-7 4-7-4V6l7-4z"/><path d="M12 22V12M12 12L5 8M12 12l7-4"/></svg></span>
+              Potencia con el asistente IA
+              <svg class="guide__arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="guide__content">
+              <p>El asistente se conecta a la API que tú elijas con <strong>tu propia API key</strong>:</p>
+              <ul>
+                <li><strong>OpenRouter</strong>, OpenAI, Anthropic, Groq, Mistral, DeepSeek...</li>
+                <li>O cualquier endpoint compatible con OpenAI: solo cambia la URL base.</li>
+                <li>Activa «Incluir código del editor» para que la IA trabaje sobre tu juego.</li>
+                <li>La key se guarda solo en tu navegador, nunca se envía a nuestros servidores.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ASISTENTE IA ============ -->
+    <section class="section section--alt" id="asistente">
+      <div class="container">
+        <div class="ai-promo">
+          <div class="reveal">
+            <p class="section__eyebrow">Copiloto creativo</p>
+            <h2 class="section__title">Un asistente de IA <span class="gradient-text">con tu propia API</span></h2>
+            <p class="section__lead">Conéctalo a OpenRouter, OpenAI, Anthropic o cualquier API compatible. Tú pones la key, tú tienes el control.</p>
+
+            <div class="ai-promo__features">
+              <div class="ai-feature">
+                <span class="ai-feature__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2L4.5 12.5H11L9.5 22 19 10.5h-6.5L13 2z"/></svg></span>
+                <div>
+                  <h4>Cualquier proveedor</h4>
+                  <p>Presets para OpenRouter, OpenAI, Anthropic, Groq, Mistral y DeepSeek — o una URL base personalizada.</p>
+                </div>
+              </div>
+              <div class="ai-feature">
+                <span class="ai-feature__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7V5a2 2 0 012-2h2M16 3h2a2 2 0 012 2v2M20 17v2a2 2 0 01-2 2h-2M8 21H6a2 2 0 01-2-2v-2M7 12h10"/></svg></span>
+                <div>
+                  <h4>Respuestas en streaming</h4>
+                  <p>El texto llega palabra por palabra en tiempo real, igual que en las apps de IA profesionales.</p>
+                </div>
+              </div>
+              <div class="ai-feature">
+                <span class="ai-feature__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg></span>
+                <div>
+                  <h4>Tu key, tu navegador</h4>
+                  <p>La clave se guarda en localStorage y solo viaja directamente al proveedor que elijas.</p>
+                </div>
+              </div>
+              <div class="ai-feature">
+                <span class="ai-feature__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></span>
+                <div>
+                  <h4>Contexto de tu juego</h4>
+                  <p>Incluye el código del editor en cada mensaje para recibir ayuda precisa sobre tu proyecto.</p>
+                </div>
+              </div>
+            </div>
+
+            <button class="btn btn--primary btn--lg" id="openAssistant">
+              Abrir asistente
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+
+          <div class="ai-promo__panel reveal reveal--delay">
+            <div class="ai-chatdemo">
+              <div class="chatdemo__msg chatdemo__msg--me">
+                <span class="chatdemo__avatar">TÚ</span>
+                <div class="chatdemo__bubble">Mi bola atraviesa los muros. ¿Cómo hago el rebote?</div>
+              </div>
+              <div class="chatdemo__msg">
+                <span class="chatdemo__avatar">RK</span>
+                <div class="chatdemo__bubble">Invierte la velocidad al chocar y limita la posición al área del canvas:<br><code>if (x &lt; 0) vx = Math.abs(vx);</code></div>
+              </div>
+              <div class="chatdemo__msg chatdemo__msg--me">
+                <span class="chatdemo__avatar">TÚ</span>
+                <div class="chatdemo__bubble">¿Y sonido al puntuar?</div>
+              </div>
+              <div class="chatdemo__msg">
+                <span class="chatdemo__avatar">RK</span>
+                <div class="chatdemo__bubble">Usa la Web Audio API: crea un <code>AudioContext</code>, genera una onda con <code>oscillator</code> y dispara <code>start()</code> al detectar la colisión.</div>
+              </div>
+            </div>
+            <div class="ai-promo__panel-foot">
+              <span>Conectado a: OpenRouter · OpenAI · Anthropic · + custom</span>
+              <button class="btn btn--ghost btn--sm" id="openAssistant2">Probar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="container footer__grid">
+      <div class="footer__brand">
+        <a href="#inicio" class="navbar__brand">
+          <img src="assets/emblem.png" alt="" class="navbar__emblem" loading="lazy">
+          <span class="navbar__wordmark">Rist<em>Kit</em></span>
+        </a>
+        <p>La plataforma para crear, jugar y aprender juegos 100% HTML directamente en el navegador.</p>
+        <div class="footer__social">
+          <a href="#" aria-label="Instagram" class="social-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="YouTube" class="social-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l5 3-5 3V9z" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="GitHub" class="social-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 00-1.3-3.2 4.2 4.2 0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 00-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 00-.1 3.2A4.6 4.6 0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a>
+          <a href="#" aria-label="Discord" class="social-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 12h.01M16 12h.01M7.5 5.5C9 5 10.5 4.7 12 4.7s3 .3 4.5.8c2 2.7 3 5.7 3 9-1.5 1.8-3.3 3-5.3 3.7l-.7-1.3M7.5 5.5c-2 2.7-3 5.7-3 9 1.5 1.8 3.3 3 5.3 3.7l.7-1.3"/></svg></a>
+        </div>
+      </div>
+      <div class="footer__col">
+        <h4>Plataforma</h4>
+        <a href="#juegos">Arcade</a>
+        <a href="#editor">Editor de juegos</a>
+        <a href="#guias">Guías</a>
+        <a href="#asistente">Asistente IA</a>
+      </div>
+      <div class="footer__col">
+        <h4>Recursos</h4>
+        <a href="#guias">Primeros pasos</a>
+        <a href="#guias">Game loop</a>
+        <a href="#guias">Colisiones</a>
+        <a href="#guias">Publicar un juego</a>
+      </div>
+      <div class="footer__col">
+        <h4>Legal</h4>
+        <a href="#">Aviso de privacidad</a>
+        <a href="#">Términos de servicio</a>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+    <div class="container footer__bottom">
+      <p>© <span id="year">2026</span> RistKit Entertainment. Todos los derechos reservados.</p>
+      <p class="footer__made">Hecho para creadores de juegos indie</p>
+    </div>
+  </footer>
+
+  <!-- ============ MODAL JUEGO ============ -->
+  <div class="modal" id="gameModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal__box">
+      <div class="modal__head">
+        <div>
+          <div class="modal__title" id="modalTitle">Juego</div>
+          <div class="modal__hint">Pulsa Esc para salir</div>
+        </div>
+        <button class="modal__close" id="modalClose" aria-label="Cerrar">✕</button>
+      </div>
+      <div class="modal__frame">
+        <iframe id="gameFrame" title="Juego en ejecución" sandbox="allow-scripts allow-same-origin allow-modals allow-pointer-lock"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ASISTENTE IA ============ -->
+  <button class="ai-fab" id="aiFab" aria-label="Abrir asistente de IA">
+    <span class="pulse" aria-hidden="true"></span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l7 4v12l-7 4-7-4V6l7-4z"/><path d="M12 22V12M12 12L5 8M12 12l7-4"/></svg>
+    <span class="label">Asistente IA</span>
+  </button>
+
+  <div class="ai-panel" id="aiPanel" role="dialog" aria-label="Asistente de IA">
+    <div class="ai-panel__head">
+      <div class="ai-panel__avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l7 4v12l-7 4-7-4V6l7-4z"/><path d="M12 22V12M12 12L5 8M12 12l7-4"/></svg>
+      </div>
+      <div class="ai-panel__title">
+        <strong>Asistente RistKit</strong>
+        <span class="ai-panel__status"><i id="aiStatusDot" class="off"></i><span id="aiStatusText">Sin conectar</span></span>
+      </div>
+      <div class="ai-panel__actions">
+        <button class="ai-iconbtn" id="aiSettingsBtn" title="Configurar API" aria-label="Configuración">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1A1.7 1.7 0 007 19.4a1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H1a2 2 0 110-4h.1A1.7 1.7 0 002.6 7a1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H7a1.7 1.7 0 001-1.5V1a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V7a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>
+        </button>
+        <button class="ai-iconbtn" id="aiClearBtn" title="Limpiar conversación" aria-label="Limpiar chat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"/></svg>
+        </button>
+        <button class="ai-iconbtn" id="aiCloseBtn" title="Cerrar" aria-label="Cerrar asistente">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Vista: chat -->
+    <div class="ai-view active" id="aiChatView">
+      <div class="ai-messages" id="aiMessages">
+        <div class="ai-empty" id="aiEmpty">
+          <div class="ai-empty__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2l7 4v12l-7 4-7-4V6l7-4z"/><path d="M12 22V12M12 12L5 8M12 12l7-4"/></svg>
+          </div>
+          <p>Configura tu API key y empieza a chatear. Puedo ayudarte a crear y mejorar juegos HTML.</p>
+          <div class="ai-chips">
+            <button class="ai-chip">Crea un juego de plataformas</button>
+            <button class="ai-chip">Explica mi game loop</button>
+            <button class="ai-chip">Añade sonido con Web Audio</button>
+          </div>
+        </div>
+      </div>
+      <div class="ai-composer">
+        <textarea id="aiInput" rows="1" placeholder="Escribe tu mensaje..." aria-label="Mensaje"></textarea>
+        <button class="ai-send" id="aiSend" aria-label="Enviar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        </button>
+      </div>
+      <div class="ai-composer__note">Las respuestas dependen del proveedor conectado. Tu API key solo se guarda en este navegador.</div>
+    </div>
+
+    <!-- Vista: configuración -->
+    <div class="ai-view" id="aiSettingsView">
+      <div class="ai-settings">
+        <h3>Conexión de API</h3>
+
+        <div class="ai-field">
+          <label for="aiProvider">Proveedor</label>
+          <select id="aiProvider">
+            <option value="openrouter">OpenRouter</option>
+            <option value="openai">OpenAI</option>
+            <option value="anthropic">Anthropic (Claude)</option>
+            <option value="groq">Groq</option>
+            <option value="mistral">Mistral AI</option>
+            <option value="deepseek">DeepSeek</option>
+            <option value="custom">API personalizada (cualquiera)</option>
+          </select>
+        </div>
+
+        <div class="ai-field">
+          <label for="aiBaseUrl">URL base</label>
+          <input type="url" id="aiBaseUrl" placeholder="https://openrouter.ai/api/v1" spellcheck="false">
+          <span class="hint">Compatible con el formato OpenAI (<code>/chat/completions</code>). Anthropic usa <code>/messages</code>.</span>
+        </div>
+
+        <div class="ai-field">
+          <label for="aiKey">API key</label>
+          <div class="ai-key-wrap">
+            <input type="password" id="aiKey" placeholder="sk-or-..." autocomplete="off" spellcheck="false">
+            <button class="ai-key-toggle" id="aiKeyToggle" type="button" aria-label="Mostrar/ocultar key">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <span class="hint">Se guarda en localStorage de tu navegador.</span>
+        </div>
+
+        <div class="ai-field">
+          <label for="aiModel">Modelo <button class="copy-btn" id="aiFetchModels" type="button">Buscar modelos</button></label>
+          <input type="text" id="aiModel" list="aiModelList" placeholder="deepseek/deepseek-chat-v3" spellcheck="false">
+          <datalist id="aiModelList"></datalist>
+        </div>
+
+        <div class="ai-field">
+          <label for="aiTemp">Temperatura: <span id="aiTempVal">0.7</span></label>
+          <input type="range" id="aiTemp" min="0" max="2" step="0.1" value="0.7" style="accent-color:var(--purple)">
+        </div>
+
+        <div class="ai-field">
+          <label for="aiSystem">Instrucción del sistema (opcional)</label>
+          <textarea id="aiSystem" rows="3" placeholder="Eres un experto en juegos web y respondes en español..."></textarea>
+        </div>
+
+        <label class="ai-check">
+          <input type="checkbox" id="aiIncludeCode" checked>
+          <span>Incluir el código del editor como contexto en cada mensaje</span>
+        </label>
+
+        <div class="ai-note">
+          La key viaja <strong>directamente</strong> al proveedor desde tu navegador.
+          En OpenRouter puedes crear keys en <a href="https://openrouter.ai/keys" target="_blank" rel="noopener">openrouter.ai/keys</a>.
+          Si el proveedor bloquea llamadas desde navegador (CORS), usa uno compatible o un proxy.
+        </div>
+
+        <div class="ai-settings__actions">
+          <button class="btn btn--primary btn--sm" id="aiSaveSettings" style="flex:1">Guardar y conectar</button>
+          <button class="btn btn--ghost btn--sm" id="aiBackToChat">Volver al chat</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/main.js"></script>
+  <script src="js/editor.js"></script>
+  <script src="js/ai.js"></script>
+</body>
+</html>

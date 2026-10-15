@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orbit Dash — RistKit</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:#0a0a0f; color:#f4f4f8; font-family:system-ui,sans-serif;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    min-height:100vh; gap:14px; overflow:hidden;
+  }
+  h1 { font-size:1.1rem; letter-spacing:.12em; text-transform:uppercase; color:#a855f7; }
+  .hud { font-size:1rem; color:#9a9ab0; }
+  .hud b { color:#fff; font-size:1.3rem; }
+  canvas {
+    background:radial-gradient(circle at 50% 0%, #16162a, #0a0a0f 70%);
+    border:1px solid rgba(168,85,247,.3); border-radius:12px;
+    box-shadow:0 0 40px rgba(168,85,247,.18); touch-action:none;
+  }
+  .hint { font-size:.78rem; color:#6b6b85; }
+  .overlay {
+    position:absolute; inset:0; display:none; place-items:center;
+    background:rgba(10,10,15,.86); backdrop-filter:blur(6px); border-radius:12px;
+    text-align:center; flex-direction:column; gap:12px; padding:20px;
+  }
+  .overlay.show { display:grid; }
+  .overlay h2 { font-size:1.6rem; color:#a855f7; }
+  button {
+    background:linear-gradient(135deg,#a855f7,#7c3aed); border:0; color:#fff;
+    padding:11px 26px; border-radius:10px; font-weight:600; cursor:pointer; font-size:.95rem;
+  }
+  button:hover { filter:brightness(1.12); }
+  .wrap { position:relative; }
+</style>
+</head>
+<body>
+<h1>🚀 Orbit Dash</h1>
+<div class="hud">Puntos: <b id="score">0</b> · Récord: <b id="best">0</b></div>
+<div class="wrap">
+  <canvas id="c" width="440" height="440"></canvas>
+  <div class="overlay show" id="overlay">
+    <h2 id="title">Orbit Dash</h2>
+    <p id="text">Espacio / clic / toque para impulsarte y esquiva los anillos.</p>
+    <button id="restart">Empezar</button>
+  </div>
+</div>
+<p class="hint">Espacio · Clic · Toque — esquivar las brechas</p>
+
+<script>
+const canvas = document.getElementById('c'), ctx = canvas.getContext('2d');
+const W = 440, H = 440;
+let player, pipes, score, best = +(localStorage.getItem('rk_dash_best') || 0), dead, started, speed, frame = 0;
+
+document.getElementById('best').textContent = best;
+
+function reset() {
+  player = { x:90, y:H/2, vy:0, r:14 };
+  pipes = []; score = 0; dead = false; started = false; speed = 3.2; frame = 0;
+  document.getElementById('score').textContent = 0;
+  document.getElementById('overlay').classList.remove('show');
+}
+function jump() {
+  if (dead) return;
+  started = true;
+  player.vy = -7.6;
+}
+function spawn() {
+  const gap = Math.max(110, 150 - score * 2);
+  const top = 50 + Math.random() * (H - gap - 100);
+  pipes.push({ x:W + 30, top, gap, passed:false });
+}
+function die() {
+  dead = true; started = false;
+  if (score > best) { best = score; localStorage.setItem('rk_dash_best', best); document.getElementById('best').textContent = best; }
+  document.getElementById('title').textContent = '¡Fin!';
+  document.getElementById('text').textContent = `Puntuación: ${score}`;
+  document.getElementById('overlay').classList.add('show');
+}
+function step() {
+  if (started) {
+    player.vy += 0.42;
+    player.y += player.vy;
+  }
+  if (player.y - player.r < 0) { player.y = player.r; player.vy = 0; }
+  if (player.y + player.r > H) return die();
+
+  frame++;
+  if (frame % Math.max(70, 95 - score * 2) === 0) spawn();
+  pipes.forEach(p => p.x -= speed);
+  pipes = pipes.filter(p => p.x > -50);
+
+  for (const p of pipes) {
+    if (!p.passed && p.x + 40 < player.x) {
+      p.passed = true; score++;
+      document.getElementById('score').textContent = score;
+      speed += 0.06;
+    }
+    if (player.x + player.r > p.x && player.x - player.r < p.x + 40) {
+      if (player.y - player.r < p.top || player.y + player.r > p.top + p.gap) return die();
+    }
+  }
+}
+function draw() {
+  ctx.clearRect(0,0,W,H);
+  // Estrellas de fondo
+  ctx.fillStyle = 'rgba(255,255,255,.25)';
+  for (let i = 0; i < 30; i++) {
+    const x = (i * 137 + frame * 0.3) % W, y = (i * 89) % H;
+    ctx.fillRect(x, y, 2, 2);
+  }
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, '#a855f7'); grad.addColorStop(1, '#6d28d9');
+  ctx.fillStyle = grad;
+  pipes.forEach(p => {
+    ctx.beginPath(); ctx.roundRect(p.x, -10, 40, p.top + 10, [0,0,8,8]); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(p.x, p.top + p.gap, 40, H, [8,8,0,0]); ctx.fill();
+  });
+  // Player
+  ctx.save();
+  ctx.translate(player.x || 90, player.y);
+  ctx.rotate(Math.max(-.5, Math.min(.8, player.vy * .06)));
+  ctx.shadowColor = '#a855f7'; ctx.shadowBlur = 18;
+  ctx.fillStyle = '#fff';
+  ctx.beginPath(); ctx.arc(0, 0, player.r, 0, 7); ctx.fill();
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = '#a855f7';
+  ctx.beginPath(); ctx.arc(3, -4, 5, 0, 7); ctx.fill();
+  ctx.restore();
+}
+function loop() {
+  if (!dead) step();
+  draw();
+  requestAnimationFrame(loop);
+}
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space') { e.preventDefault(); if (dead) { reset(); jump(); } else jump(); }
+});
+canvas.addEventListener('mousedown', () => { if (dead) { reset(); jump(); } else jump(); });
+canvas.addEventListener('touchstart', e => { e.preventDefault(); if (dead) { reset(); jump(); } else jump(); }, {passive:false});
+document.getElementById('restart').onclick = () => { reset(); jump(); };
+reset();
+loop();
+</script>
+</body>
+</html>

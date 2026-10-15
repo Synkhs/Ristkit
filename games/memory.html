@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memoria Orbital — RistKit</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:#0a0a0f; color:#f4f4f8; font-family:system-ui,sans-serif;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    min-height:100vh; gap:16px; overflow:auto; padding:20px 0;
+  }
+  h1 { font-size:1.1rem; letter-spacing:.12em; text-transform:uppercase; color:#a855f7; }
+  .hud { display:flex; gap:24px; font-size:.9rem; color:#9a9ab0; }
+  .hud b { color:#fff; }
+  .board {
+    display:grid; grid-template-columns:repeat(4, 76px); gap:12px;
+    padding:20px; background:#0e0e16; border:1px solid rgba(168,85,247,.3);
+    border-radius:16px; box-shadow:0 0 40px rgba(168,85,247,.18);
+  }
+  .card {
+    width:76px; height:76px; perspective:600px; cursor:pointer;
+  }
+  .card__inner {
+    position:relative; width:100%; height:100%;
+    transition:transform .45s; transform-style:preserve-3d;
+  }
+  .card.flipped .card__inner, .card.matched .card__inner { transform:rotateY(180deg); }
+  .card__face {
+    position:absolute; inset:0; display:grid; place-items:center;
+    border-radius:12px; backface-visibility:hidden; font-size:1.8rem;
+  }
+  .card__front {
+    background:linear-gradient(135deg,#1c1c28,#16161f);
+    border:1px solid rgba(168,85,247,.35);
+    color:transparent;
+    background-clip:padding-box;
+  }
+  .card__front::after {
+    content:"?"; color:#a855f7; font-weight:700; font-size:1.4rem;
+  }
+  .card__back {
+    background:linear-gradient(135deg,#a855f7,#7c3aed); border:1px solid #c4b5fd;
+    transform:rotateY(180deg);
+  }
+  .card.matched .card__back { filter:brightness(1.25); box-shadow:0 0 18px rgba(168,85,247,.6); }
+  .card.matched { cursor:default; }
+  .hint { font-size:.78rem; color:#6b6b85; }
+  button {
+    background:linear-gradient(135deg,#a855f7,#7c3aed); border:0; color:#fff;
+    padding:11px 26px; border-radius:10px; font-weight:600; cursor:pointer; font-size:.95rem;
+  }
+  button:hover { filter:brightness(1.12); }
+  #win {
+    display:none; flex-direction:column; align-items:center; gap:12px;
+    padding:24px 34px; background:#13131d; border:1px solid rgba(168,85,247,.4);
+    border-radius:16px; text-align:center;
+  }
+  #win.show { display:flex; }
+  #win h2 { color:#a855f7; }
+</style>
+</head>
+<body>
+<h1>🃏 Memoria Orbital</h1>
+<div class="hud"><span>Movimientos: <b id="moves">0</b></span><span>Aciertos: <b id="found">0</b>/8</span><span>Récord: <b id="best">0</b></span></div>
+<div class="board" id="board"></div>
+<div id="win">
+  <h2>¡Completado! 🎉</h2>
+  <p id="winText"></p>
+  <button id="again">Jugar otra vez</button>
+</div>
+<p class="hint">Encuentra las 8 parejas girando las cartas</p>
+
+<script>
+const EMOJIS = ['🚀','🎮','⚡','🎧','🔮','👾','🛸','💎'];
+let cards, first, lock, moves, found;
+const best = +(localStorage.getItem('rk_mem_best') || 0);
+document.getElementById('best').textContent = best ? best + ' mov.' : '—';
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = (Math.random() * (i + 1)) | 0;
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function reset() {
+  cards = shuffle([...EMOJIS, ...EMOJIS]);
+  first = null; lock = false; moves = 0; found = 0;
+  document.getElementById('moves').textContent = 0;
+  document.getElementById('found').textContent = '0';
+  document.getElementById('win').classList.remove('show');
+  const board = document.getElementById('board');
+  board.innerHTML = '';
+  cards.forEach((emoji, i) => {
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.dataset.emoji = emoji;
+    el.innerHTML = `<div class="card__inner">
+      <div class="card__face card__front"></div>
+      <div class="card__face card__back">${emoji}</div>
+    </div>`;
+    el.addEventListener('click', () => flip(el));
+    board.appendChild(el);
+  });
+}
+function flip(el) {
+  if (lock || el.classList.contains('flipped') || el.classList.contains('matched')) return;
+  el.classList.add('flipped');
+  if (!first) { first = el; return; }
+  moves++;
+  document.getElementById('moves').textContent = moves;
+  if (first.dataset.emoji === el.dataset.emoji) {
+    first.classList.add('matched'); el.classList.add('matched');
+    first = null; found++;
+    document.getElementById('found').textContent = found;
+    if (found === 8) {
+      let msg = `Lo lograste en ${moves} movimientos.`;
+      if (!best || moves < best) {
+        localStorage.setItem('rk_mem_best', moves);
+        document.getElementById('best').textContent = moves + ' mov. 🏆';
+        msg += ' ¡Nuevo récord!';
+      }
+      document.getElementById('winText').textContent = msg;
+      document.getElementById('win').classList.add('show');
+    }
+  } else {
+    lock = true;
+    setTimeout(() => {
+      first.classList.remove('flipped');
+      el.classList.remove('flipped');
+      first = null; lock = false;
+    }, 750);
+  }
+}
+document.getElementById('again').onclick = reset;
+reset();
+</script>
+</body>
+</html>
