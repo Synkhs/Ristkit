@@ -12,19 +12,34 @@
   const RK = (window.RK = {
     games: {
       all() {
-        try { return JSON.parse(localStorage.getItem(GAMES_KEY)) || []; }
-        catch { return []; }
+        try {
+          const raw = JSON.parse(localStorage.getItem(GAMES_KEY)) || [];
+          const list = raw.filter((g) => g && typeof g === "object");
+          let healed = list.length !== raw.length;
+          for (const g of list) {
+            if (typeof g.id !== "string" || !g.id) {
+              g.id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+              healed = true;
+            }
+          }
+          if (healed) localStorage.setItem(GAMES_KEY, JSON.stringify(list));
+          return list;
+        } catch { return []; }
       },
       save(list) {
         localStorage.setItem(GAMES_KEY, JSON.stringify(list));
       },
       add(game) {
         const list = RK.games.all();
+        const now = Date.now();
         const saved = {
-          id: game.id || Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
           ...game,
+          id:
+            typeof game.id === "string" && game.id
+              ? game.id
+              : now.toString(36) + Math.random().toString(36).slice(2, 6),
+          createdAt: game.createdAt || now,
+          updatedAt: now,
         };
         const idx = list.findIndex((g) => g.id === saved.id);
         if (idx >= 0) list[idx] = { ...list[idx], ...saved };
