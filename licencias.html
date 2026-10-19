@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Licencias de terceros — RistKit Studio</title>
+  <meta name="description" content="Licencias de las librerías, fuentes y recursos de terceros usados en RistKit Studio.">
+  <meta name="theme-color" content="#0a0a0f">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="legal-page">
+
+  <header class="navbar" id="navbar">
+    <div class="container navbar__inner">
+      <a href="index.html" class="navbar__brand" aria-label="RistKit inicio">
+        <img src="assets/emblem.png" alt="" class="navbar__emblem">
+        <span class="navbar__wordmark">Rist<em>Kit</em></span>
+      </a>
+      <nav class="navbar__menu" aria-label="Navegación">
+        <a href="index.html" class="navbar__link">← Volver al estudio</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="legal-hero">
+      <h1>Licencias de terceros</h1>
+      <p class="updated">Última actualización: 16 de octubre de 2026</p>
+    </div>
+
+    <article class="legal-content">
+      <p>
+        RistKit Studio usa los siguientes recursos de terceros. Cada uno se sirve por CDN con
+        <strong>versión fijada</strong> (nunca <code>latest</code>) o forma parte del repositorio.
+      </p>
+
+      <h2>Fuentes tipográficas — Google Fonts</h2>
+      <p><strong>Orbitron, Inter, JetBrains Mono</strong> — SIL Open Font License 1.1 (OFL).<br>
+      © The Orbitron, Inter y JetBrains Mono Project Authors.</p>
+
+      <h2>CodeMirror 6 (editor de código)</h2>
+      <p><strong>MIT License</strong> — © Marijn Haverbeke y colaboradores.<br>
+      Usado por CDN (esm.sh / jsDelivr) con versión fijada. Permiso de uso comercial y modificación sin límite, conservando el aviso de copyright.</p>
+
+      <h2>Motores y librerías opcionales (plantillas de proyecto)</h2>
+      <table class="legal-table">
+        <thead><tr><th>Librería</th><th>Licencia</th><th>Uso</th></tr></thead>
+        <tbody>
+          <tr><td>Phaser 3</td><td>MIT</td><td>Motor 2D (plantilla opcional)</td></tr>
+          <tr><td>PixiJS</td><td>MIT</td><td>Renderizado 2D (plantilla opcional)</td></tr>
+          <tr><td>Matter.js</td><td>MIT</td><td>Física 2D (plantilla opcional)</td></tr>
+          <tr><td>Planck.js</td><td>MIT</td><td>Física 2D tipo Box2D (plantilla opcional)</td></tr>
+          <tr><td>Three.js</td><td>MIT</td><td>3D WebGL (plantilla opcional)</td></tr>
+          <tr><td>Howler.js</td><td>MIT</td><td>Audio (plantilla opcional)</td></tr>
+          <tr><td>Kaplay (antes Kaboom)</td><td>MIT</td><td>Motor 2D (plantilla opcional)</td></tr>
+        </tbody>
+      </table>
+      <p>Los juegos creados con estas plantillas incluyen la atribución en su cabecera si así lo requiere la licencia (MIT exige conservar el aviso).</p>
+
+      <h2>Iconos</h2>
+      <p>Los iconos de la interfaz son SVG dibujados a medida para RistKit (heredan la licencia del proyecto principal) o proceden de sets con licencia MIT/CC0.</p>
+
+      <h2>Licencia del proyecto principal</h2>
+      <p>
+        El código fuente de RistKit Studio se distribuye bajo la licencia que indique el repositorio del proyecto.
+        Consulta el archivo <code>LICENSE</code> incluido en la distribución o en el repositorio oficial.
+      </p>
+
+      <a class="btn btn--ghost legal-back" href="index.html">← Volver al inicio</a>
+    </article>
+  </main>
+
+  <script src="js/i18n.js"></script>
+</body>
+</html>

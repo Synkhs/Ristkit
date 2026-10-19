@@ -9,10 +9,30 @@
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="icon" href="favicon.ico" sizes="48x48">
   <link rel="apple-touch-icon" href="assets/logo-128.png">
-  <meta property="og:title" content="RistKit Studio">
-  <meta property="og:description" content="Crea, juega y domina juegos HTML. Editor en línea, guías y asistente de IA con tu propia API key.">
+  <link rel="manifest" href="manifest.json">
+
+  <!-- ===== SEO social: Open Graph + Twitter Card ===== -->
+  <meta property="og:url" content="https://ristkit.com/">
+  <meta property="og:site_name" content="RistKit Studio">
+  <meta property="og:title" content="RistKit Studio — Crea y juega juegos en HTML">
+  <meta property="og:description" content="Editor en línea, arcade, guías y asistente de IA con tu propia API key. Crea tu juego HTML y compártelo en un enlace.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="assets/logo-512.png">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:image" content="https://ristkit.com/assets/logo-512.png">
+  <meta property="og:image:width" content="512">
+  <meta property="og:image:height" content="512">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="RistKit Studio — Crea y juega juegos en HTML">
+  <meta name="twitter:description" content="Editor en línea, arcade, guías y asistente de IA con tu propia API key.">
+  <meta name="twitter:image" content="https://ristkit.com/assets/logo-512.png">
+
+  <!-- ===== Content-Security-Policy =====
+       Protege la página: los juegos del editor se ejecutan en iframes
+       sandbox sin allow-same-origin y heredan esta CSP. 'unsafe-inline'
+       es necesario por los scripts inline de los juegos (srcdoc).
+       connect-src admite cualquier https para soportar APIs personalizadas. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://esm.sh; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' data: blob:; connect-src 'self' https: http://localhost:*; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -27,6 +47,19 @@
     "operatingSystem": "Web",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
     "inLanguage": "es"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Arcade de RistKit Studio",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "item": { "@type": "VideoGame", "name": "Snake Clásico", "gamePlatform": "Web", "operatingSystem": "Cualquier navegador", "genre": "Arcade", "applicationCategory": "GameApplication", "url": "https://ristkit.com/#juegos" } },
+      { "@type": "ListItem", "position": 2, "item": { "@type": "VideoGame", "name": "Pong", "gamePlatform": "Web", "operatingSystem": "Cualquier navegador", "genre": "Deportes", "applicationCategory": "GameApplication", "url": "https://ristkit.com/#juegos" } },
+      { "@type": "ListItem", "position": 3, "item": { "@type": "VideoGame", "name": "Orbit Dash", "gamePlatform": "Web", "operatingSystem": "Cualquier navegador", "genre": "Arcade", "applicationCategory": "GameApplication", "url": "https://ristkit.com/#juegos" } },
+      { "@type": "ListItem", "position": 4, "item": { "@type": "VideoGame", "name": "Memoria", "gamePlatform": "Web", "operatingSystem": "Cualquier navegador", "genre": "Puzzle", "applicationCategory": "GameApplication", "url": "https://ristkit.com/#juegos" } }
+    ]
   }
   </script>
 </head>
@@ -243,7 +276,7 @@
       <div class="container">
         <div class="section__header reveal">
           <p class="section__eyebrow">Creador de juegos</p>
-          <h2 class="section__title">Escribe tu juego, <span class="gradient-text">púlsalo jugar</span></h2>
+          <h2 class="section__title">Escribe tu juego, <span class="gradient-text">púlsale a Jugar</span></h2>
           <p class="section__lead">HTML + CSS + JavaScript en un solo archivo. Ejecuta en vivo, guarda en tu arcade y descarga cuando quieras.</p>
         </div>
 
@@ -279,12 +312,35 @@
           </div>
 
           <div class="ide__body">
-            <div class="ide__code">
-              <div class="ide__gutter" id="gutter" aria-hidden="true"><div>1</div></div>
-              <textarea id="codeInput" spellcheck="false" placeholder="<!DOCTYPE html>&#10;<html>&#10;  ...&#10;</html>" aria-label="Código del juego"></textarea>
+            <div class="ide__main">
+              <div class="ide__files" id="fileTabs" role="tablist" aria-label="Archivos del proyecto">
+                <button class="ide__file active" data-file="index.html" role="tab" aria-selected="true">index.html</button>
+                <button class="ide__file" data-file="style.css" role="tab" aria-selected="false">style.css</button>
+                <button class="ide__file" data-file="game.js" role="tab" aria-selected="false">game.js</button>
+              </div>
+              <div class="ide__code">
+                <!-- textarea oculta: conserva compatibilidad con el resto del código (ta.value) -->
+                <textarea id="codeInput" class="visually-hidden" spellcheck="false" aria-label="Código del juego"></textarea>
+                <div id="cmEditor" class="ide__cm" aria-label="Editor de código"></div>
+              </div>
             </div>
-            <div class="ide__preview">
-              <iframe id="preview" title="Vista previa del juego" sandbox="allow-scripts allow-same-origin allow-modals allow-pointer-lock"></iframe>
+            <div class="ide__side">
+              <div class="ide__preview">
+                <iframe id="preview" title="Vista previa del juego" sandbox="allow-scripts allow-modals allow-pointer-lock"></iframe>
+              </div>
+              <div class="ide__console" id="ideConsole">
+                <div class="ide__console-head">
+                  <strong>Consola</strong>
+                  <div class="ide__console-filters" role="group" aria-label="Filtros de consola">
+                    <button data-cfilter="log" class="active" type="button">Log</button>
+                    <button data-cfilter="warn" type="button">Avisos</button>
+                    <button data-cfilter="error" type="button">Errores</button>
+                  </div>
+                  <span class="ide__fps" id="ideFps" title="FPS de la vista previa">-- FPS</span>
+                  <button class="tool-btn tool-btn--xs" id="consoleClear" type="button">Limpiar</button>
+                </div>
+                <div class="ide__console-body" id="consoleBody" aria-live="polite"></div>
+              </div>
             </div>
           </div>
 
@@ -559,12 +615,6 @@
           <span class="navbar__wordmark">Rist<em>Kit</em></span>
         </a>
         <p>La plataforma para crear, jugar y aprender juegos 100% HTML directamente en el navegador.</p>
-        <div class="footer__social">
-          <a href="#" aria-label="Instagram" class="social-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
-          <a href="#" aria-label="YouTube" class="social-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l5 3-5 3V9z" fill="currentColor" stroke="none"/></svg></a>
-          <a href="#" aria-label="GitHub" class="social-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 00-1.3-3.2 4.2 4.2 0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 00-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 00-.1 3.2A4.6 4.6 0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a>
-          <a href="#" aria-label="Discord" class="social-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 12h.01M16 12h.01M7.5 5.5C9 5 10.5 4.7 12 4.7s3 .3 4.5.8c2 2.7 3 5.7 3 9-1.5 1.8-3.3 3-5.3 3.7l-.7-1.3M7.5 5.5c-2 2.7-3 5.7-3 9 1.5 1.8 3.3 3 5.3 3.7l.7-1.3"/></svg></a>
-        </div>
       </div>
       <div class="footer__col">
         <h4>Plataforma</h4>
@@ -582,9 +632,10 @@
       </div>
       <div class="footer__col">
         <h4>Legal</h4>
-        <a href="#">Aviso de privacidad</a>
-        <a href="#">Términos de servicio</a>
-        <a href="#">Cookies</a>
+        <a href="privacidad.html">Aviso de privacidad</a>
+        <a href="terminos.html">Términos de servicio</a>
+        <a href="cookies.html">Cookies</a>
+        <a href="licencias.html">Licencias</a>
       </div>
     </div>
     <div class="container footer__bottom">
@@ -599,12 +650,14 @@
       <div class="modal__head">
         <div>
           <div class="modal__title" id="modalTitle">Juego</div>
-          <div class="modal__hint">Pulsa Esc para salir</div>
+          <div class="modal__hint">Pulsa Esc para salir · El juego corre en iframe aislado (sin acceso a tus datos)</div>
         </div>
         <button class="modal__close" id="modalClose" aria-label="Cerrar">✕</button>
       </div>
       <div class="modal__frame">
-        <iframe id="gameFrame" title="Juego en ejecución" sandbox="allow-scripts allow-same-origin allow-modals allow-pointer-lock"></iframe>
+        <!-- Sandbox estricto por defecto (código de usuario/terceros).
+             main.js añade allow-same-origin SOLO para juegos preinstalados de primera parte. -->
+        <iframe id="gameFrame" title="Juego en ejecución" sandbox="allow-scripts allow-modals allow-pointer-lock"></iframe>
       </div>
     </div>
   </div>
@@ -698,6 +751,20 @@
         </div>
 
         <div class="ai-field">
+          <label class="ai-check">
+            <input type="checkbox" id="aiEncryptToggle">
+            <span>Cifrar la API key con una contraseña (recomendado en equipos compartidos)</span>
+          </label>
+          <span class="hint" id="aiEncryptStatus">Sin cifrar — la key se guarda en claro en este navegador</span>
+          <div class="ai-field" id="aiEncryptPassField" style="display:none;margin-top:8px">
+            <label for="aiEncryptPass">Contraseña de cifrado</label>
+            <input type="password" id="aiEncryptPass" placeholder="Mínimo 4 caracteres" autocomplete="new-password">
+            <span class="hint">Si olvidas esta contraseña, tendrás que pegar la key de nuevo.</span>
+          </div>
+          <button class="btn btn--ghost btn--sm" id="aiUnlockKey" type="button" style="margin-top:8px;display:none">Desbloquear key cifrada…</button>
+        </div>
+
+        <div class="ai-field">
           <label for="aiModel">Modelo <button class="copy-btn" id="aiFetchModels" type="button">Buscar modelos</button></label>
           <input type="text" id="aiModel" list="aiModelList" placeholder="deepseek/deepseek-chat-v3" spellcheck="false">
           <datalist id="aiModelList"></datalist>
@@ -718,15 +785,19 @@
           <span>Incluir el código del editor como contexto en cada mensaje</span>
         </label>
 
-        <div class="ai-note">
-          La key viaja <strong>directamente</strong> al proveedor desde tu navegador.
+        <div class="ai-note ai-note--warn" role="note">
+          <strong>Aviso de privacidad:</strong> tu API key se guarda <strong>solo en el localStorage de este navegador</strong>.
+          Nunca se envía a servidores de RistKit (esta web no tiene servidor propio).
+          La key viaja <strong>directamente</strong> al proveedor que elijas.
+          Si borras los datos del navegador o usas modo incógnito, la key desaparece.
           En OpenRouter puedes crear keys en <a href="https://openrouter.ai/keys" target="_blank" rel="noopener">openrouter.ai/keys</a>.
-          Si el proveedor bloquea llamadas desde navegador (CORS), usa uno compatible o un proxy.
+          Si el proveedor bloquea llamadas desde navegador (CORS), usa OpenRouter o un proxy propio.
         </div>
 
         <div class="ai-settings__actions">
           <button class="btn btn--primary btn--sm" id="aiSaveSettings" style="flex:1">Guardar y conectar</button>
           <button class="btn btn--ghost btn--sm" id="aiBackToChat">Volver al chat</button>
+          <button class="btn btn--danger btn--sm" id="aiDeleteKey" type="button">Borrar mi API key</button>
         </div>
       </div>
     </div>
@@ -735,6 +806,8 @@
   <!-- Toast -->
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <script src="js/errors.js"></script>
+  <script src="js/i18n.js"></script>
   <script src="js/main.js"></script>
   <script src="js/editor.js"></script>
   <script src="js/ai.js"></script>

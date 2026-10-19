@@ -175,10 +175,19 @@
   const modalClose = $("#modalClose");
   let lastFocused = null;
 
+  /* Sandbox dinámico (seguridad):
+     - Código de usuario/terceros (srcdoc): allow-scripts SIN allow-same-origin,
+       así NO puede leer el localStorage de la página (donde vive la API key de IA).
+     - Juegos preinstalados de primera parte (src /games/*.html): se les añade
+       allow-same-origin SOLO para conservar sus récords locales; es código propio. */
+  const SANDBOX_USER = "allow-scripts allow-modals allow-pointer-lock";
+  const SANDBOX_FIRST_PARTY = SANDBOX_USER + " allow-same-origin";
+
   function openGame({ title, src, code }) {
     if (!modal) return;
     lastFocused = document.activeElement;
     modalTitle.textContent = title || "Juego";
+    frame.setAttribute("sandbox", src ? SANDBOX_FIRST_PARTY : SANDBOX_USER);
     if (src) { frame.removeAttribute("srcdoc"); frame.src = src; }
     else if (code) { frame.src = "about:blank"; frame.srcdoc = code; }
     modal.classList.add("open");

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aviso de privacidad — RistKit Studio</title>
+  <meta name="description" content="Cómo RistKit Studio trata tus datos: sin servidor propio, todo se guarda en el localStorage de tu navegador.">
+  <meta name="theme-color" content="#0a0a0f">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="legal-page">
+
+  <header class="navbar" id="navbar">
+    <div class="container navbar__inner">
+      <a href="index.html" class="navbar__brand" aria-label="RistKit inicio">
+        <img src="assets/emblem.png" alt="" class="navbar__emblem">
+        <span class="navbar__wordmark">Rist<em>Kit</em></span>
+      </a>
+      <nav class="navbar__menu" aria-label="Navegación">
+        <a href="index.html" class="navbar__link">← Volver al estudio</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="legal-hero">
+      <h1>Aviso de privacidad</h1>
+      <p class="updated">Última actualización: 16 de octubre de 2026</p>
+    </div>
+
+    <article class="legal-content">
+      <h2>Resumen en una frase</h2>
+      <p>
+        RistKit Studio <strong>no tiene servidor propio</strong>: no crea cuentas, no recoge datos personales
+        y no usa cookies de seguimiento. Todo lo que guardas (juegos, ajustes, API key)
+        se queda en el <strong>localStorage de tu navegador</strong> y solo tú puedes leerlo.
+      </p>
+
+      <h2>1. Responsable</h2>
+      <p>
+        Esta web es operada por <strong>RistKit Entertainment</strong> (proyecto independiente).
+        Para cualquier consulta sobre privacidad puedes contactar a través del
+        <a href="index.html#asistente">formulario de feedback</a> del estudio o del repositorio del proyecto.
+      </p>
+
+      <h2>2. Qué datos guardamos (y dónde)</h2>
+      <p>Usamos exclusivamente el almacenamiento local del navegador (<code>localStorage</code>). No hay base de datos ni backend:</p>
+      <table class="legal-table">
+        <thead>
+          <tr><th>Clave en localStorage</th><th>Contenido</th><th>Finalidad</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>ristkit_games_v1</code></td><td>Tus juegos guardados (nombre y código)</td><td>Mostrarlos en tu arcade personal</td></tr>
+          <tr><td><code>ristkit_editor_autosave</code></td><td>Borrador automático del editor</td><td>Recuperar tu trabajo si cierras la pestaña</td></tr>
+          <tr><td><code>ristkit_ai_settings</code></td><td>Proveedor de IA, modelo, ajustes y <strong>tu API key</strong></td><td>Conectar el asistente con tu proveedor</td></tr>
+          <tr><td><code>ristkit_ai_chat</code></td><td>Historial de conversación con la IA</td><td>Conservar el chat entre sesiones</td></tr>
+          <tr><td><code>rk_snake_best</code>, <code>rk_dash_best</code>, <code>rk_mem_best</code></td><td>Récords locales de los juegos incluidos</td><td>Mostrar tu mejor puntuación</td></tr>
+        </tbody>
+      </table>
+      <p>
+        <strong>Tu API key nunca se envía a nuestros servidores</strong> (no existen): viaja
+        <strong>directamente desde tu navegador</strong> al proveedor que elijas (OpenRouter, OpenAI,
+        Anthropic, Groq, Mistral, DeepSeek o una URL personalizada). Puedes borrarla en cualquier momento
+        con el botón <em>«Borrar mi API key»</em> del asistente o borrando los datos del sitio del navegador.
+      </p>
+
+      <h2>3. Aislamiento de los juegos</h2>
+      <p>
+        El código que ejecutas (juegos del editor, juegos guardados y juegos compartidos por terceros)
+        se ejecuta dentro de un <code>&lt;iframe&gt;</code> con <code>sandbox="allow-scripts"</code>
+        <strong>sin <code>allow-same-origin</code></strong>. Esto significa que ese código
+        <strong>no puede leer</strong> el <code>localStorage</code> de la página principal (donde está tu API key),
+        ni tus juegos guardados, ni hacer peticiones con tus credenciales.
+      </p>
+
+      <h2>4. Servicios de terceros</h2>
+      <ul>
+        <li><strong>Google Fonts</strong> (fuentes): puede registrar tu IP según su política. Alternativa: usar las fuentes del sistema (solo cambia el aspecto).</li>
+        <li><strong>Proveedores de IA</strong>: solo reciben los mensajes que envías desde el chat, con la key que tú proporcionas. Consulta la política de cada proveedor.</li>
+        <li><strong>jsDelivr / unpkg</strong> (CDN): pueden servir librerías del editor (CodeMirror) en futuras versiones; reciben tu IP al descargarlas.</li>
+      </ul>
+
+      <h2>5. Tus derechos (RGPD)</h2>
+      <p>
+        Al no tratar datos personales en servidores, el ejercicio de derechos (acceso, rectificación,
+        supresión, portabilidad) se reduce a tu navegador: puedes <strong>exportar</strong> tus juegos
+        desde el editor y <strong>borrar</strong> todo el almacenamiento de la web desde la configuración
+        de tu navegador (<em>Configuración → Privacidad → Datos de sitios</em>). Al borrarlo, se eliminan
+        juegos, ajustes, chat y API key de forma irreversible en ese dispositivo.
+      </p>
+
+      <h2>6. Menores de edad</h2>
+      <p>El servicio no está dirigido específicamente a menores de 14 años y no recogemos conscientemente sus datos.</p>
+
+      <h2>7. Cambios en este aviso</h2>
+      <p>
+        Si en el futuro se añaden funciones con servidor (cuentas, galería pública), se solicitará consentimiento
+        explícito y se actualizará este documento <strong>antes</strong> de activarlas.
+      </p>
+
+      <a class="btn btn--ghost legal-back" href="index.html">← Volver al inicio</a>
+    </article>
+  </main>
+
+  <script src="js/i18n.js"></script>
+</body>
+</html>

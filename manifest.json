@@ -1,0 +1,20 @@
+{
+  "name": "RistKit Studio — Crea y juega juegos HTML",
+  "short_name": "RistKit",
+  "description": "Editor en línea, arcade y asistente de IA para crear juegos HTML directamente en el navegador.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a0a0f",
+  "theme_color": "#0a0a0f",
+  "lang": "es",
+  "dir": "ltr",
+  "categories": ["games", "developer", "education"],
+  "icons": [
+    { "src": "assets/logo-128.png", "sizes": "128x128", "type": "image/png", "purpose": "any" },
+    { "src": "assets/logo-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/logo-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cookies — RistKit Studio</title>
+  <meta name="description" content="Política de cookies de RistKit Studio: no usamos cookies de seguimiento; el almacenamiento es localStorage en tu navegador.">
+  <meta name="theme-color" content="#0a0a0f">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="legal-page">
+
+  <header class="navbar" id="navbar">
+    <div class="container navbar__inner">
+      <a href="index.html" class="navbar__brand" aria-label="RistKit inicio">
+        <img src="assets/emblem.png" alt="" class="navbar__emblem">
+        <span class="navbar__wordmark">Rist<em>Kit</em></span>
+      </a>
+      <nav class="navbar__menu" aria-label="Navegación">
+        <a href="index.html" class="navbar__link">← Volver al estudio</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="legal-hero">
+      <h1>Política de cookies</h1>
+      <p class="updated">Última actualización: 16 de octubre de 2026</p>
+    </div>
+
+    <article class="legal-content">
+      <h2>En corto: no usamos cookies de seguimiento</h2>
+      <p>
+        RistKit Studio <strong>no instala cookies propias de publicidad ni de analítica</strong>.
+        No hay banner de cookies porque no hay nada que consentir en ese sentido.
+      </p>
+
+      <h2>1. ¿Qué son las cookies y qué usamos en su lugar?</h2>
+      <p>
+        Una cookie es un texto pequeño que los sitios guardan en tu navegador y que se envía con cada petición al servidor.
+        Como esta web <strong>no tiene servidor propio</strong>, no necesita cookies: usamos
+        <strong><code>localStorage</code></strong>, una función del navegador que guarda datos
+        <em>en tu equipo</em> sin enviarlos con cada visita. Por eso no se incluye banner de consentimiento.
+      </p>
+
+      <h2>2. Almacenamiento local que sí utilizamos</h2>
+      <table class="legal-table">
+        <thead>
+          <tr><th>Clave</th><th>Para qué sirve</th><th>Caducidad</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>ristkit_games_v1</code></td><td>Tus juegos guardados</td><td>Hasta que borres los datos del sitio</td></tr>
+          <tr><td><code>ristkit_editor_autosave</code></td><td>Borrador del editor</td><td>Hasta que borres los datos del sitio</td></tr>
+          <tr><td><code>ristkit_ai_settings</code></td><td>Ajustes y API key del asistente</td><td>Hasta que borres los datos del sitio</td></tr>
+          <tr><td><code>ristkit_ai_chat</code></td><td>Historial del chat de IA</td><td>Hasta que borres los datos del sitio</td></tr>
+          <tr><td><code>rk_snake_best</code> y demás</td><td>Récords locales de juegos</td><td>Hasta que borres los datos del sitio</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Puedes borrarlo todo en <em>Configuración de tu navegador → Privacidad → Datos de sitios</em>,
+        o por juego concretamente desde el icono de candado/cámara de la barra de direcciones.
+      </p>
+
+      <h2>3. Cookies y almacenamiento de terceros</h2>
+      <p>
+        Al cargar la web se piden recursos a terceros que <strong>pueden</strong> establecer su propio almacenamiento
+        según sus políticas (no lo controlamos):
+      </p>
+      <ul>
+        <li><strong>Google Fonts</strong> (fuentes): recibe tu IP; no instala cookies de seguimiento en esta web, pero su CDN tiene su propia política.</li>
+        <li><strong>Proveedores de IA</strong> (solo cuando usas el asistente): la llamada va directa de tu navegador a su API; aplican sus propios términos.</li>
+        <li><strong>CDN de librerías</strong> (jsDelivr/unpkg, si se usan): solo descarga código estático.</li>
+      </ul>
+
+      <h2>4. Analítica</h2>
+      <p>
+        Actualmente <strong>no hay ninguna herramienta de analítica</strong> instalada (ni Google Analytics, ni cookies de medición).
+        Si en el futuro se añade una analítica respetuosa con la privacidad (por ejemplo Plausible, autoalojada o sin cookies),
+        se avisará en esta página y, si fuera necesario, se pedirá consentimiento previo.
+      </p>
+
+      <h2>5. Cómo desactivar el almacenamiento local</h2>
+      <p>
+        Puedes bloquear el <code>localStorage</code> desde la configuración de tu navegador.
+        Ten en cuenta que si lo bloqueas, <strong>no se guardarán tus juegos, récords ni la configuración del asistente</strong>:
+        la web seguirá funcionando para crear y probar, pero nada persistirá entre sesiones.
+      </p>
+
+      <a class="btn btn--ghost legal-back" href="index.html">← Volver al inicio</a>
+    </article>
+  </main>
+
+  <script src="js/i18n.js"></script>
+</body>
+</html>
